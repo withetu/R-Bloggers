@@ -1,0 +1,59 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#================================================================================
+#https://www.r-bloggers.com/image-compression-with-principal-component-analysis/
+#Image Compression with Principal Component Analysis
+#================================================================================
+
+
+library(jpeg)
+library(png)
+library(abind)
+
+#The readJPEG function is used to convert the image into its matrix representation.
+cat <- readJPEG("C:\\Users\\user\\Documents\\GitHub\\R-Bloggers\\cat.jpg")
+ncol(cat)
+nrow(cat)
+
+#The cat image is now represented as three 600×398 matrices as an array with each matrix corresponding to the RGB color value scheme. Extract the individual color value matrices to perform PCA on each.
+r <- cat[,,1]
+g <- cat[,,2]
+b <- cat[,,3]
+
+#the returned image will not have the right RGB values due to having their respective means subtracted from each pixel color vector.
+cat.r.pca <- prcomp(r, center = FALSE)
+cat.g.pca <- prcomp(g, center = FALSE)
+cat.b.pca <- prcomp(b, center = FALSE)
+
+#Collect the PCA objects into a list.
+rgb.pca <- list(cat.r.pca, cat.g.pca, cat.b.pca)
+
+#The following loop reconstructs the original image using the projections of the data using increasing amounts of principal components. We will see that as the number of principal components increase, the more representative of the original image the reconstruction becomes. This sequential improvement in quality is because as more principal components are used, the more the variance (information) is described. The first few principal components will have the most drastic change in quality while the last few components will not make much if any, difference to quality.
+for (i in seq.int(3, round(nrow(cat) - 10), length.out = 10)) {
+  pca.img <- sapply(rgb.pca, function(j) {
+    compressed.img <- j$x[,1:i] %*% t(j$rotation[,1:i])
+  }, simplify = 'array')
+  writeJPEG(pca.img, paste('compressed/cat_compressed_', round(i,0), '_components.jpg', sep = ''))
+}
+
+original <- file.info('cat.jpg')$size / 1000
+imgs <- dir('compressed/')
+ 
+for (i in imgs) {
+  full.path <- paste('compressed/', i, sep='')
+  print(paste(i, ' size: ', file.info(full.path)$size / 1000, ' original: ', original, ' % diff: ', round((file.info(full.path)$size / 1000 - original) / original, 2) * 100, '%', sep = ''))
+}
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
