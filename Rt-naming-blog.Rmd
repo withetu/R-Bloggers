@@ -1,0 +1,121 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#=======================================================
+#https://www.r-bloggers.com/the-rt-of-naming-your-blog/
+#The Rt of naming your blog
+#=======================================================
+
+
+
+library("rvest")
+library("purrr")
+library("tibble")
+library("stringr")
+
+blogs_list <- read_html("https://www.r-bloggers.com/blogs-list/")
+blogs_list
+
+blogs_list <- html_nodes(blogs_list, "ul")
+blogs_list
+
+blogs_list <- blogs_list[str_detect(blogs_list, "xoxo blogroll")][2]
+blogs_list
+
+blogs_list <- toString(blogs_list)
+blogs_list <- str_split(blogs_list, "<li><a", simplify = TRUE)
+# it starts from 6
+blogs_list <- blogs_list[6:length(blogs_list)]
+head(blogs_list)
+
+extract_link <- function(x){
+  x <- str_replace(x,
+                   pattern = "href=\\\"",
+                   replacement = "")
+  x <- str_replace(x,
+                   pattern = "\\\" onclick=.*\\n",
+                   replacement = "")
+  x <- str_trim(x)
+  return(x)
+}
+
+blogs_address <- map_chr(blogs_list, extract_link)
+# the last one is a special snowflake
+blogs_address[length(blogs_address)] <- str_replace(blogs_address[length(blogs_address)], "\\\n\\\t<\\/ul>", "")
+head(blogs_address)
+
+#So let’s now extract names!
+extract_names <- function(x, address){
+  address <- str_replace_all(address, "\\/", "\\\\\\/")
+  address <- str_replace_all(address, "\\.", "\\\\\\.")
+  x <- str_replace_all(x, paste0(".*", address, "', '"), "")
+  x <- str_replace_all(x, "]\\)\\;.*\\\n", "")
+  x <- str_replace(x, "'", "")
+  return(x)
+}
+
+blogs_names <- map2_chr(blogs_list, blogs_address, extract_names)
+# last one is a special snowflake again
+blogs_names[length(blogs_names)] <- str_replace(blogs_names[length(blogs_address)], "\\\n\\\t<\\/ul>", "")
+head(blogs_names)
+
+#Now I can build a tibble of names and addresses of blogs!
+blogs_info <- tibble(name = blogs_names, address = blogs_address)
+
+#Before starting to have fun looking at blog names and addresses, I’ll extract the extension from the addresses.
+extract_extension <- function(df){
+  x <- str_replace(df$address, "feed\\.r-bloggers\\.xml", "")
+  x <- str_replace(x, "\\.xml", "")
+  x <- str_replace(x, "\\.html", "")
+  x <- str_replace(x, "\\.php", "")
+  x <- str_split(x, "\\.", simplify = TRUE)
+  x <- x[length(x)]
+  x <- str_replace_all(x, "\\/.*", "")
+  return(x)
+}
+
+blogs_info <- by_row(blogs_info,
+                     extract_extension,
+                     .to = "extension",
+                     .collate = "cols")
+
+knitr::kable(head(blogs_info, n=20))
+
+#What about extensions?
+library("dplyr")
+blogs_info %>% group_by(extension) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n)) %>%
+  head(n = 16) %>%
+  knitr::kable()
+
+
+#After this random exploration of blog names, I realized you’d all be waiting for a wordcloud. Or so I think. So let’s make a wordcloud of R blog names!
+
+library("wordcloud")
+library("tm")
+words <- toString(blogs_info$name)
+words <- str_split(words, pattern = " ", simplify = TRUE)
+set.seed(1)
+wordcloud(words, colors = viridis::viridis_pal(end = 0.8)(10),
+          min.freq = 3, random.color = TRUE)
+
+
+
+
+
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
