@@ -1,0 +1,71 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#=========================================================================
+#https://www.r-bloggers.com/tutorial-how-to-set-up-a-twitter-bot-using-r/
+#Tutorial: How to set up a Twitter bot using R
+#=========================================================================
+
+
+
+# Packages ----------------------------------------------------------------
+library(rvest)
+library(stringr)
+library(dplyr)
+library(twitteR)
+
+# get number of packages --------------------------------------------------
+url <- "https://cran.r-project.org/web/packages/"
+
+page <- read_html(url)
+
+n_packages <- page %>%
+  html_text() %>%
+  str_extract("[[:digit:]]* available packages") %>%
+  str_extract("[[:digit:]]*") %>%
+  as.numeric()
+
+n_packages_last_time <- read.table(file = "n_packages.csv", stringsAsFactors = F, sep = ";")
+
+n_packages_last_time <- n_packages_last_time$V2[nrow(n_packages_last_time)]
+
+## check if news packages are published, new tweet only when number of packages changed
+if(n_packages > n_packages_last_time){
+  # Twitter -----------------------------------------------------------------
+  
+  # set up twitter api
+  api_keys <- read.csv2("twitter_access.csv", stringsAsFactors = FALSE)
+  
+  setup_twitter_oauth(consumer_key = api_keys$consumer_key, consumer_secret = api_keys$consumer_secret, access_token = api_keys$access_token,
+                      access_secret = api_keys$access_secret)
+  
+  time <- Sys.time()
+  
+  #create tweet
+  tweet_text <- paste0("Week in Review: #Aluminium’s", time, "grows a", n_packages, " stronger ")
+  
+  # send tweet
+  tweet(tweet_text)
+  
+  # write n to file ---------------------------------------------------------
+  n_packages_df <- data.frame(time = Sys.time(), n = n_packages)
+  
+  write.table(n_packages_df, file = "n_packages.csv", row.names = FALSE,col.names = FALSE,
+              append = TRUE, sep = ";")
+  
+}
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
