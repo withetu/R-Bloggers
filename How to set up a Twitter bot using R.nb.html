@@ -176,12 +176,55 @@ $(document).ready(function () {
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubl9wYWNrYWdlc19sYXN0X3RpbWUgPC0gcmVhZC50YWJsZShmaWxlID0gXCJuX3BhY2thZ2VzLmNzdlwiLCBzdHJpbmdzQXNGYWN0b3JzID0gRiwgc2VwID0gXCI7XCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>n_packages_last_time &lt;- read.table(file = &quot;n_packages.csv&quot;, stringsAsFactors = F, sep = &quot;;&quot;)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiNodHRwczovL3d3dy5yLWJsb2dnZXJzLmNvbS90dXRvcmlhbC1ob3ctdG8tc2V0LXVwLWEtdHdpdHRlci1ib3QtdXNpbmctci9cbiNUdXRvcmlhbDogSG93IHRvIHNldCB1cCBhIFR3aXR0ZXIgYm90IHVzaW5nIFJcbiM9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4jIFBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbmxpYnJhcnkocnZlc3QpXG5saWJyYXJ5KHN0cmluZ3IpXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeSh0d2l0dGVSKVxuIyBnZXQgbnVtYmVyIG9mIHBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG51cmwgPC0gXCJodHRwczovL2NyYW4uci1wcm9qZWN0Lm9yZy93ZWIvcGFja2FnZXMvXCJcbnBhZ2UgPC0gcmVhZF9odG1sKHVybClcbm5fcGFja2FnZXMgPC0gcGFnZSAlPiVcbiAgaHRtbF90ZXh0KCkgJT4lXG4gIHN0cl9leHRyYWN0KFwiW1s6ZGlnaXQ6XV0qIGF2YWlsYWJsZSBwYWNrYWdlc1wiKSAlPiVcbiAgc3RyX2V4dHJhY3QoXCJbWzpkaWdpdDpdXSpcIikgJT4lXG4gIGFzLm51bWVyaWMoKVxubl9wYWNrYWdlc19sYXN0X3RpbWUgPC0gcmVhZC50YWJsZShmaWxlID0gXCJuX3BhY2thZ2VzLmNzdlwiLCBzdHJpbmdzQXNGYWN0b3JzID0gRiwgc2VwID0gXCI7XCIpXG5uX3BhY2thZ2VzX2xhc3RfdGltZSA8LSBuX3BhY2thZ2VzX2xhc3RfdGltZSRWMltucm93KG5fcGFja2FnZXNfbGFzdF90aW1lKV1cbiMjIGNoZWNrIGlmIG5ld3MgcGFja2FnZXMgYXJlIHB1Ymxpc2hlZCwgbmV3IHR3ZWV0IG9ubHkgd2hlbiBudW1iZXIgb2YgcGFja2FnZXMgY2hhbmdlZFxuaWYobl9wYWNrYWdlcyA+IG5fcGFja2FnZXNfbGFzdF90aW1lKXtcbiAgIyBUd2l0dGVyIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gIFxuICAjIHNldCB1cCB0d2l0dGVyIGFwaVxuICBhcGlfa2V5cyA8LSByZWFkLmNzdjIoXCJ0d2l0dGVyX2FjY2Vzcy5jc3ZcIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxuICBcbiAgc2V0dXBfdHdpdHRlcl9vYXV0aChjb25zdW1lcl9rZXkgPSBhcGlfa2V5cyRjb25zdW1lcl9rZXksIGNvbnN1bWVyX3NlY3JldCA9IGFwaV9rZXlzJGNvbnN1bWVyX3NlY3JldCwgYWNjZXNzX3Rva2VuID0gYXBpX2tleXMkYWNjZXNzX3Rva2VuLFxuICAgICAgICAgICAgICAgICAgICAgIGFjY2Vzc19zZWNyZXQgPSBhcGlfa2V5cyRhY2Nlc3Nfc2VjcmV0KVxuICBcbiAgdGltZSA8LSBTeXMudGltZSgpXG4gIFxuICAjY3JlYXRlIHR3ZWV0XG4gIHR3ZWV0X3RleHQgPC0gcGFzdGUwKFwiV2VlayBpbiBSZXZpZXc6ICNBbHVtaW5pdW3igJlzXCIsIHRpbWUsIFwiZ3Jvd3MgYVwiLCBuX3BhY2thZ2VzLCBcIiBzdHJvbmdlciBcIilcbiAgXG4gICMgc2VuZCB0d2VldFxuICB0d2VldCh0d2VldF90ZXh0KVxuICBcbiAgIyB3cml0ZSBuIHRvIGZpbGUgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gIG5fcGFja2FnZXNfZGYgPC0gZGF0YS5mcmFtZSh0aW1lID0gU3lzLnRpbWUoKSwgbiA9IG5fcGFja2FnZXMpXG4gIFxuICB3cml0ZS50YWJsZShuX3BhY2thZ2VzX2RmLCBmaWxlID0gXCJuX3BhY2thZ2VzLmNzdlwiLCByb3cubmFtZXMgPSBGQUxTRSxjb2wubmFtZXMgPSBGQUxTRSxcbiAgICAgICAgICAgICAgYXBwZW5kID0gVFJVRSwgc2VwID0gXCI7XCIpXG4gIFxufVxuYGBgIn0= -->
+<pre class="r"><code>#=========================================================================
+#https://www.r-bloggers.com/tutorial-how-to-set-up-a-twitter-bot-using-r/
+#Tutorial: How to set up a Twitter bot using R
+#=========================================================================
+# Packages ----------------------------------------------------------------
+library(rvest)
+library(stringr)
+library(dplyr)
+library(twitteR)
+# get number of packages --------------------------------------------------
+url &lt;- &quot;https://cran.r-project.org/web/packages/&quot;
+page &lt;- read_html(url)
+n_packages &lt;- page %&gt;%
+  html_text() %&gt;%
+  str_extract(&quot;[[:digit:]]* available packages&quot;) %&gt;%
+  str_extract(&quot;[[:digit:]]*&quot;) %&gt;%
+  as.numeric()
+n_packages_last_time &lt;- read.table(file = &quot;n_packages.csv&quot;, stringsAsFactors = F, sep = &quot;;&quot;)
+n_packages_last_time &lt;- n_packages_last_time$V2[nrow(n_packages_last_time)]
+## check if news packages are published, new tweet only when number of packages changed
+if(n_packages &gt; n_packages_last_time){
+  # Twitter -----------------------------------------------------------------
+  
+  # set up twitter api
+  api_keys &lt;- read.csv2(&quot;twitter_access.csv&quot;, stringsAsFactors = FALSE)
+  
+  setup_twitter_oauth(consumer_key = api_keys$consumer_key, consumer_secret = api_keys$consumer_secret, access_token = api_keys$access_token,
+                      access_secret = api_keys$access_secret)
+  
+  time &lt;- Sys.time()
+  
+  #create tweet
+  tweet_text &lt;- paste0(&quot;Week in Review: #Aluminium’s&quot;, time, &quot;grows a&quot;, n_packages, &quot; stronger &quot;)
+  
+  # send tweet
+  tweet(tweet_text)
+  
+  # write n to file ---------------------------------------------------------
+  n_packages_df &lt;- data.frame(time = Sys.time(), n = n_packages)
+  
+  write.table(n_packages_df, file = &quot;n_packages.csv&quot;, row.names = FALSE,col.names = FALSE,
+              append = TRUE, sep = &quot;;&quot;)
+  
+}</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnbl9wYWNrYWdlcy5jc3YnOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5RXJyb3IgaW4gZmlsZShmaWxlLCBcInJ0XCIpIDogY2Fubm90IG9wZW4gdGhlIGNvbm5lY3Rpb25cbiJ9 -->
-<pre><code>cannot open file 'n_packages.csv': No such file or directoryError in file(file, &quot;rt&quot;) : cannot open the connection</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gaWYgKG5fcGFja2FnZXMgPiBuX3BhY2thZ2VzX2xhc3RfdGltZSkgeyA6IFxuICBhcmd1bWVudCBpcyBvZiBsZW5ndGggemVyb1xuIn0= -->
+<pre><code>Error in if (n_packages &gt; n_packages_last_time) { : 
+  argument is of length zero</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
