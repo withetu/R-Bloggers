@@ -1,0 +1,77 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#================================================================================================
+#https://www.r-bloggers.com/r-tutorial-visualizing-multivariate-relationships-in-large-datasets/
+#R Tutorial: Visualizing Multivariate Relationships in Large Datasets
+#================================================================================================
+
+
+library(scatterplot3d)
+library(nlme) 
+attach(MathAchieve) #take a look at the structure of the dataset
+str(MathAchieve)
+
+####################################################
+#do a correlation matrix with the 3 numeric vars; 
+###################################################
+data("MathAchieve")
+cor(as.matrix(MathAchieve[c(4,5,6)]), method = "pearson")
+scatterplot3d(SES,MathAch,MEANSES, main = "Basic 3D Scatterplot")
+
+####################################################
+##use a linear regression model to plot a regression plane
+#y=MathAchieve, SES, MEANSES are predictor variables
+####################################################
+model1=lm(MathAch ~ SES + MEANSES) ## generate a regression 
+#take a look at the regression output
+summary(model1)
+#run scatterplot again putting results in model
+model <- scatterplot3d(SES,MathAch,MEANSES, main = "Basic 3D Scatterplot") #do the plot with default options
+#link the scatterplot and linear model using the plane3d function
+model$plane3d(model1) ## link the 3d scatterplot in ‘model’ to the ‘plane3d’ option with ‘model1’ regression information
+
+#To look at a comparisons of each data type and then view all 6 together begin with the following:
+
+####################################################
+attach(MathAchieve) #attach the dataset
+#set up 3 data frames with numeric, factors, and mixed
+####################################################
+mathmix <- data.frame(SES, MathAch, MEANSES, School = factor(School), Minority = factor(Minority), Sex=factor(Sex)) #all 6 vars
+mathfact <- data.frame(School = factor(School), Minority = factor(Minority), Sex=factor(Sex)) #3 factor vars
+mathnum <- data.frame(SES, MathAch, MEANSES) #3 numeric vars
+####################################################
+#To view a comparison of the 3 numeric variables use:
+####################################################
+require(tabplot) #load tabplot package
+tableplot(mathnum) #generate a table plot with numeric vars only
+
+#To view only the 3 factor variables use:
+####################################################
+require(tabplot) #load tabplot package
+tableplot(mathfact) #generate a table plot with factors only
+
+#To view and compare table plots of all six variables use:
+####################################################
+require(tabplot) #load tabplot package
+tableplot(mathmix) #generate a table plot with all six variables
+####################################################
+
+
+
+
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
