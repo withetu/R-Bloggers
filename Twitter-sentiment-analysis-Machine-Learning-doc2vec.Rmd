@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#========================================================================================================
+#https://www.r-bloggers.com/twitter-sentiment-analysis-with-machine-learning-in-r-using-doc2vec-approach/
+#Twitter sentiment analysis with Machine Learning in R using doc2vec approach
+#========================================================================================================
+
+
+library(twitteR)
+library(ROAuth)
+library(tidyverse)
+library(text2vec)
+library(caret)
+library(glmnet)
+library(ggrepel)
+
+
+### loading and preprocessing a training set of tweets
+# function for converting some symbols
+conv_fun <- function(x) iconv(x, "latin1", "ASCII", "")
+
+##### loading classified tweets ######
+# source: http://help.sentiment140.com/for-students/
+# 0 - the polarity of the tweet (0 = negative, 4 = positive)
+# 1 - the id of the tweet
+# 2 - the date of the tweet
+# 3 - the query. If there is no query, then this value is NO_QUERY.
+# 4 - the user that tweeted
+# 5 - the text of the tweet
+tweets_classified <- read_csv("C:\\Users\\user\\Desktop\\trainingandtestdata\\training.1600000.processed.noemoticon.csv", col_names = c('sentiment', 'id', 'date', 'query', 'user', 'text')) %>%
+  # converting some symbols
+  dmap_at('text', conv_fun) %>%
+  # replacing class values
+  mutate(sentiment = ifelse(sentiment == 0,0,1))
+
+# data splitting on train and test
+set.seed(2340)
+trainIndex <- createDataPartition(tweets_classified$sentiment, p = 0.8, 
+ list = FALSE, 
+ times = 1)
+tweets_train <- tweets_classified[trainIndex, ]
+tweets_test <- tweets_classified[-trainIndex, ]
+
+##### doc2vec #####
+# define preprocessing function and tokenization function
+prep_fun <- tolower
+tok_fun <- word_tokenizer
+
+it_train <- itoken(tweets_train$text,
+                   preprocessor = prep_fun,
+                   tokenizer = tok_fun,
+                   ids = tweets_train$id,
+                   progressbar = TRUE)
+
+
+# creating vocabulary and document-term matrix
+vocab <- create_vocabulary(it_train)
+vectorizer <- vocab_vectorizer(vocab)
+dtm_train <- create_dtm(it_train, vectorizer)
+dtm_test <- create_dtm(it_test, vectorizer)
+# define tf-idf model
+tfidf <- TfIdf$new()
+# fit the model to the train data and transform it with the fitted model
+dtm_train_tfidf <- fit_transform(dtm_train, tfidf)
+dtm_test_tfidf <- fit_transform(dtm_test, tfidf)
+
+
+
+
+### fetching tweets ###
+download.file(url = "http://curl.haxx.se/ca/cacert.pem",
+destfile = "cacert.pem")
+setup_twitter_oauth('q9BszUjo3xl50Y1713xiEHRFz', # api key
+'NRKpG2DUQ1KJRolsthvn6gcJUBNUymwMv11vYdKqiUUaQZRD2A', # api secret
+'242258211-hmKdtSSaelo69LuFLZAe9s1bKKaDXme5PdTpYhCg', # access token
+'StWMGyLJdwy6npXozbRXDWr9skALhWGmzwpIVwQDDYSQQ' # access token secret
+)
+ 
+df_tweets <- twListToDF(searchTwitter('setapp OR #setapp', n = 1000, lang = 'en')) %>%
+# converting some symbols
+dmap_at('text', conv_fun)
+ 
+# preprocessing and tokenization
+it_tweets <- itoken(df_tweets$text,
+preprocessor = prep_fun,
+tokenizer = tok_fun,
+ids = df_tweets$id,
+progressbar = TRUE)
+ 
+# creating vocabulary and document-term matrix
+dtm_tweets <- create_dtm(it_tweets, vectorizer)
+ 
+# transforming data with tf-idf
+dtm_tweets_tfidf <- fit_transform(dtm_tweets, tfidf)
+ 
+# loading classification model
+glmnet_classifier <- readRDS('glmnet_classifier.RDS')
+ 
+# predict probabilities of positiveness
+preds_tweets <- predict(glmnet_classifier, dtm_tweets_tfidf, type = 'response')[ ,1]
+ 
+# adding rates to initial dataset
+df_tweets$sentiment <- preds_tweets
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
