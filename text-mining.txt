@@ -1,0 +1,60 @@
+Franco Zanardi is the Honorary President of Zanardi Fonderie that is a producer and supplier of ductile iron and ADI castings based in Verona, Italy.  An MSc in Mechanical Engineering with four decades of experience in casting and ADI materials, he is also the Past President of Confindustria Verona, and Vice President of Assofond. AlCircle had the opportunity to discuss with him different aspects of ADI and aluminium during his visit to India and we summarised the discussion in an interview script complemented by a video. 
+
+
+Here is an excerpt from the interview:
+
+AlCircle: Tell us in brief about the research and development of Austempering Technology by Zanardi Fonderie.
+
+Mr. Zanardi: Zanardi Fonderie is a family firm that has been producing ductile iron and ADI castings through sand casting for years.  Though we had already been into the production of normal ductile iron since 1958 (1931 is the year of foundation), we started working on Austempered Ductile Iron technology (ADI) in 1982, using Dr. Horst Mühlberger’s Germanite patent producing ADI which could be machined after heat treatment and slowly started supplying ADI casts. In 1987 we began developing research projects, mainly addressed to ADI funded by Italy. In the nineties we started characterizing our ADI materials, assigning them properties like impact, fatigue, notch sensitivity, wear resistance, etc. so that our designers could produce the castings properly.
+
+AlCircle:  What are Austempered materials and how does ADI or Austempered Duct Iron help in material lightweighting?
+
+Mr. Zanardi: Austempering is a process which can be applied to a number of materials, for example, compacted graphite iron, spheroidal graphite otherwise said ductile iron, grey iron, and also to steel with significant Silicon content. We austenitize these materials using high temperatures up to 920 °C, the we quench into a salt bath at temperatures ranging between 230 to 400°C. In case of cast irons and steel with a significant Silicon content it produces a structure of acicular ferrite and high carbon stabilized austenite known as ausferrite and in case of steel with low Silicon content  it produces a bainitic microstructure. The process improves the mechanical properties like strength, resistance, ductility and toughness and reduces distortions making it highly suitable for casting.
+
+ADI helps in lightweighting because it is as simple as casting normal iron but it has the toughness of steel with minimum distortions and no repairing need at a much more economical way. On top of that high strength ADI has 10% less density than steel making it strong and lightweight.
+
+AlCircle:  Do you think application-wise there is any overlap between forged aluminium and ADIs, or to put it in other words, does ADI present any ‘Threat of Substitution’ for aluminium in any particular area of application?
+
+Mr. Zanardi: In my view, in the competition among steel, iron, ductile iron, austempered ductile iron and aluminium, the main loser is steel, mainly in case of welding and casting applications.  The comparison is applicable with structural steel in room temperature or maximum up to 250C as ADI loses its properties at high temperature. However, ADI retains its properties at extreme low temperatures like minus 60 to 80 degree Celsius.
+
+Steel does win when it is a question of stiffness.  ADI is a very good material for making diesel engine crankshaft as it can do away with surface hardening and cut down on weight. But it is difficult to substitute forged steel with ADI casting in diesel engine crankshaft unless you are designing an ODI engine for ADI casting.  Our European research experiment programme shows we can bring down the weight of a diesel engine from 15 kg to 9.3 kg by using ADI in the crankshaft instead of steel.
+
+In case of a comparison with aluminium, we are actually complementary as we work in different fields.  The strength of ADI ranges between 800 and 1600 Megapascal, while  the maximum strength in case of aluminium alloys is around 600 MPa. For example in case of brackets for industrial heavy vehicles, ADI works much better than aluminium. But with aluminium you can make thinner sections than ADI which makes it suitable for new age cars. I believe, in the application market, aluminium can be used in synergy with ADI in different fields.
+
+The main disadvantage about ADI is that despite the wide research and applications and international standards, there is less awareness about the metal compared to steel or normal iron.  
+
+AlCircle: Can ADI and aluminium work hand in hand in facilitating lightweighting over the industry sectors?
+
+Mr. Zanardi: That is exactly we are doing through ‘Sinfonet’ (Smart and Innovative Foundry Network), a foundry network in Italy where 45 different foundry companies  work hand in hand in the field of aluminium, steel ADI and DI for the growth and development in this sector. We are doing lots of R&D work in foundry casting and one field that we are currently taking high interest is how to reduce weight in the railways. Professor Bonollo, who is our leader and an expert on aluminium casting and is involved in our ADI material, has made a complementary evaluation of lightweighting applications and demonstrated that the potential in lightweighting is more in railways than it is believed to be in the automotive sector. We are working together to improve the performances of our ADI materials as well as aluminium in to find different applications where they can be used effectively rather than pitting one material into competition against other.  We are trying to find newer approach for the application of these materials as designers have been used to working with steel in these high strength applications for many years.
+
+AlCircle: Tel, us in brief, about the innovative and sustainable solutions that Zanardi Fonderie offers to different fields and industries.
+
+Mr. Zanardi: Zanardi Fonderie is a family run business and we intend to remain so in future.  Our mission is to build a vision for our future generations, a kingdom vision that does not only look into just tomorrow but also into the long term future.  This is very helpful towards maintaining motived and skilled people with a desire to know and learn.  This is the main tool we have to build a stable research organization. We are a research foundry with a single site end-to-end facility in Minerbe (Verona) with 22,000 tons of annual casting capacity and a best class austempering treatment plant with an ADI casting capacity of 10,000 tons and a state-of-the-art machining shop that caters to our customers and their contractors.
+
+We also offer our austempering treatment services to foundries and to external steel forgers.
+
+AlCircle: What are the industries that Zanardi Fonderie is supplying to?
+
+Mr. Zanardi: We are catering to general engineering, earth movement and construction machines, off-highway vehicles, industrial heavy vehicles, gears axles and transmissions, agricultural machinery sectors, high pressure piston pumps, hydraulic pumps for dirty and abrasive liquids, holders for plastic bottles dies etc. We are particularly not producing high automotive volumes although our foundry is capable of producing that. Instead, we work like a support industry for high volume parts manufacturers for the automotive sector. We have been highly appreciated for the lightweight parts that we have been developing to automotive suppliers.
+
+We have kept ourselves limited to supplying to our customers in Europe and Russia as our mission is to stay close to our end-user market. However, we are also open to supply special value parts, machined parts and casting treatment service globally in future.
+
+AlCircle: Which material do you think would bring about a revolution in the field of material efficiency and lightweighting?
+
+Mr. Zanardi:  I think the new material that can bring about a change in a number of applications is IDI. IDI or Isothermed Ductile Iron is a desruptive material produced by Zanardi Fonderie via applying heat treatment to an unalloyed ductile iron. The company has a patent on the neology and the material process. The IDI matrix structure mainly comprises ferrite and perlite, which are distributed differently with respect to traditional ductile iron. The mechanical properties of IDI are halfway between those of perlitic ductile iron and ADI. You can see the per-ferritic structure of IDI in the image below:
+
+News
+
+As IDI can be produced without additional alloying elements means it is particularly good in terms of quality and cost saving for thick components requiring high level static and fatigue strength. This can be of great advantage in automotive castings with different thickness.
+
+AlCircle: What is your view on the use of aluminium material in automotive, aerospace and construction?
+
+Mr. Zanardi: Before answering this I must say I am not an expert in aluminium. However, from my limited listening from experts I can say aluminium has a great future in all these fields. Aluminium can grow much more in casting if more metallurgical research and development can be done in the field of aluminium gravity casting to avoid surface defects and imperfections. Otherwise, I feel, ductile Aluminium applications would be limited to simple shapes like forging, extruding or high quality pressure die casting. For more complicated and defect and imperfection free shapes aluminium needs to work on its casting ability. I’m sure my colleagues from aluminium metallurgy have been working towards improving on the metallurgical ability of aluminium in such applications and would come up with solutions for the same in order to expand its application field.
+
+AlCircle: Please rate ADI against Aluminium in terms of ductility, malleability, density and recyclability.
+
+Mr. Zanardi: As far as ductility is concerned, I believe aluminium and ADI are almost same in case of forging and extrusion. However, in case of gravity casting, ADI has an upper hand.  In case of malleability, aluminium wins as ADI material is not malleable like aluminium. As for density is concerned aluminium is a winner as it has the lowest density among steel, iron and ADI. As ADI and aluminium are both metals they score equal in recyclability index.
+
+As I have said before, my understanding of aluminium is limited and I would be happy to welcome questions, comments and discussions on the points that I have made so far on both the materials. 
+
+Disclaimer: “The information presented herein is neither intended nor implied to be a substitute for professional advice. The views and opinions shared in the interview section of www.alcircle.com are unique to the interviewees and do not necessarily reflect the viewpoint of www.alcircle.com."
