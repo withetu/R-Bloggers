@@ -52,7 +52,7 @@ library(pROC)
 
 # natural language processing
 
-library(msLanguageR)
+#library(msLanguageR)
 library(tm)
 library(jiebaR)
 
@@ -88,12 +88,15 @@ str(df)
 
 # 2.1.2 Visualization of data
 
+#the proportion of employees with different job titles (or any other possible factor) for status of "attrition" and "non-attrition" may vary, and this can be plotted as follows. People titled "Laboratory Technician", "Sales Executive", and "Research Scientist" are among the top 3 groups that exhibit highest attrition rate.
+
 ggplot(df, aes(JobRole, fill=Attrition))+
   geom_bar(aes(y=(..count..)/sum(..count..)), position="dodge")+
   scale_y_continuous(labels = percent)+
   xlab("Job Role")+
   ylab("Percentage")
 
+#monthly income, job level, and service year may affect decision of leaving for employees in different departments. For example, junior staffs with lower pay will be more likely to leave compared to those who are paid higher.
 
 ggplot(filter(df, (YearsAtCompany >= 2) & (YearsAtCompany <=5) & (JobLevel <3)),
        aes(x=factor(JobRole), y=MonthlyIncome, color=factor(Attrition)))+
@@ -103,6 +106,76 @@ ggplot(filter(df, (YearsAtCompany >= 2) & (YearsAtCompany <=5) & (JobLevel <3)),
   scale_fill_discrete(guide=guide_legend(title = "Attrition"))+
   theme_bw()+
   theme(text=element_text(size = 13), legend.position = "top")
+
+#Promotion is a commonly adopted HR strategy for employee retention. It can be observed in the following plot that for a certain department, e.g., Research & Development, employees with higher job level is more likely to leave if there are years since their last promotion.
+
+ggplot(filter(df, as.character(Attrition) == "Yes"), aes(x=YearsSinceLastPromotion)) +
+  geom_histogram(binwidth=0.5) +
+  aes(y=..density..) +
+  xlab("Years since last promotion.") +
+  ylab("Density") +
+  # scale_fill_discrete(guide=guide_legend(title="Attrition")) +
+  facet_grid(Department ~ JobLevel)
+    
+     
+# 2.1.3 Data pre-processing
+
+#To perform further advanced analysis on the data set, initial pre-processing is necessary.
+
+# get predictors that has no variation.
+
+pred_no_var <- names(df[, nearZeroVar(df)]) %>% print()
+
+# remove the zero variation predictor columns.
+
+df %>% select(-one_of(pred_no_var))
+
+# convert certain integer variable to factor variable.
+
+int_2_ftr_vars <- c("Education", "EnvironmentSatisfaction", "JobInvolvement", "JobLevel", "JobSatisfaction", "NumCompaniesWorked", "PerformanceRating", "RelationshipSatisfaction", "StockOptionLevel")
+
+df[, int_2_ftr_vars] <- lapply((df[, int_2_ftr_vars]), as.factor)
+
+#The variables of character type are converted to categorical type.
+
+df %<>% mutate_if(is.character, as.factor)
+
+#Take a look at the new data set.
+
+str(df)
+
+
+# 2.1.4 Problem formalization
+
+#After the data is well prepared, a model can be constructed for attrition prediction. Normally employee attrition prediction is categorized as a binary classification problem, i.e., to predict whether or not an employee will leave.
+
+#Check the label column to make sure it is a factor type, as the model to be built is a classifier.
+
+is.factor(df$Attrition)
+
+# 2.1.5 Feature selection
+
+#It is possible that not all variables are correlated with the label, feature selection is therefore performed to filter out the most relevant ones.
+
+#The following shows how to achieve variable importance ranking with a random forest model.
+
+# set up the training control.
+
+control <- trainControl(method="repeatedcv", number = 3, repeats = 1)
+
+# train the model
+
+model <- train(dplyr::select(df, -Attrition), 
+               df$Attrition,
+               data=df, 
+               method="rf", 
+               preProcess="scale", 
+               trControl=control)
+
+
+
+
+
 
 
 ```
