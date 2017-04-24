@@ -1,0 +1,59 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# ===============================================================
+# Tic Tac Toe Simulation — Random Moves
+# https://www.r-bloggers.com/tic-tac-toe-simulation-random-moves/
+# ===============================================================
+
+
+
+
+
+draw.board <- function(board) { # Draw the board
+  xo <- c("X", " ", "O") # Symbols
+  par(mar = rep(0,4))
+  plot.new()
+  plot.window(xlim = c(0,30), ylim = c(0,30))
+  abline(h = c(10,20), col="darkgrey", lwd = 4)
+  abline(v = c(10,20), col="darkgrey", lwd = 4)
+  pieces <- xo[board+2]
+  text(rep(c(5,15,25), 3), c(rep(25,3), rep(15,3), rep(5,3)), pieces, cex = 6)
+  # Identify location of any three in a row
+  square <- t(matrix(board, nrow = 3))
+  hor <- abs(rowSums(square))
+  if(any(hor == 3))
+    hor <- (4 - which(hor == 3)) *10-5
+  else
+    hor <- 0
+  ver <- abs(colSums(square))
+  if(any(ver == 3))
+    ver <- which(ver == 3) *10-5
+  else
+    ver <- 0
+  diag1 <- sum(diag(square))
+  diag2 <- sum(diag(t(apply(square, 2, rev))))
+  # Draw winning lines
+  if(hor > 0) lines(c(0,30), rep(hor, 2), lwd=10, col="red")
+    if (ver > 0) lines(rep(ver, 2), c(0, 30), lwd=10, col="red")
+    if (abs(diag1) == 3) lines(c(2, 28), c(28, 2), lwd=10, col="red")
+    if (abs(diag2) == 3) lines(c(2, 28), c(2, 28), lwd=10, col="red")
+  
+}
+
+
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
