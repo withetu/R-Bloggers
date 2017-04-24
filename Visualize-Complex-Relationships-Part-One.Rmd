@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# =============================================================================================================
+# The R qgraph Package: Using R to Visualize Complex Relationships Among Variables in a Large Dataset, Part One
+# https://www.r-bloggers.com/the-r-qgraph-package-using-r-to-visualize-complex-relationships-among-variables-in-a-large-dataset-part-one/
+# =============================================================================================================
+
+
+
+
+###################################################
+#data from package SemiPar; dataset milan.mort
+#dataset has 3652 cases and 9 vars
+##################################################
+library(SemiPar)
+library(Hmisc)
+library(qgraph)
+####################################################
+
+data("milan.mort")
+str(milan.mort)
+
+###############################################
+#round the corr output to 2 decimal places
+#put output into variable cormatround
+#coerce data to matrix
+#########################################
+library(Hmisc)
+#cormatround > round(cormatround, 2)
+rcorr(as.matrix(milan.mort, type="pearson"))
+cormat=cor(milan.mort) 
+qgraph(cormat, shape="circle", posCol="darkgreen", negCol="darkred", layout="groups", vsize=10)
+cormat=cor(milan.mort)
+qgraph(cormat, shape="circle", posCol="darkgreen", negCol="darkred", layout="groups", vsize=10)
+
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
