@@ -1,0 +1,184 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# ===============================================================================
+
+# Experimenting With Sankey Diagrams in R and Python
+
+# https://psychemedia.github.io/parlihacks/sankeyFlow.html
+# https://www.r-bloggers.com/experimenting-with-sankey-diagrams-in-r-and-python/
+# https://github.com/psychemedia/parlihacks/blob/master/Rmd/sankeyFlow.Rmd
+
+# ===============================================================================
+
+
+
+
+# Migration Flows Sankey
+
+
+
+#The RCharts package throws a wobbly if we don't load knitr in explicitly
+library(knitr)
+library(readr)
+
+#Data from ONS: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/migrationwithintheuk/datasets/matricesofinternalmigrationmovesbetweenlocalauthoritiesandregionsincludingthecountriesofwalesscotlandandnorthernireland
+regionsquarematrix2015 = read.csv("C:\\Users\\user\\Documents\\GitHub\\R-Bloggers\\regionsquarematrix2015.csv", skip = 8)
+
+#The data has thousand separator commas - so remove them and convert to numeric
+#There is probably a more idiomatic way of doing this using tidyr...
+regionsquarematrix2015 = cbind(regionsquarematrix2015[1:2],
+                               sapply(regionsquarematrix2015[3:ncol(regionsquarematrix2015)],
+                                      function(x) as.numeric(gsub(",", "", x))))
+head(regionsquarematrix2015)
+
+
+library(tidyr)
+
+#Melt the data (wide to long) so we have from/to/value flows
+rr=regionsquarematrix2015 %>% gather(source, value, 3:ncol(.))
+
+#Merge in names for the source areas
+rr=merge(rr, unique(data.frame(SOURCE=rr$DESTINATION, source=rr$Region)), by='source')
+
+#The Sankey diagram generators dislike cycles - so set unique labels for from/to
+rr$source=paste0(rr$source,'_')
+rr$SOURCE=paste0(rr$SOURCE, '')
+
+#Drop rows that have no flow associated with them
+rr=rr[!is.na(rr$value),]
+
+colnames(rr) = c("source","targetName","target","value","sourceName")
+rr = rr[,c("sourceName","targetName","source","target","value")]
+head(rr)
+
+
+
+# googleVis
+# We can generate a Sankey diagram using googleVis from a data frame representing an edge list in the following way:
+
+#For use in Rmd/knitr, set the block parameter: results='asis'
+library(googleVis)
+options(gvis.plot.tag='chart')
+
+#Generate the Sankey diagram HTML
+s=gvisSankey(rr[,c('source','target','value')])
+#And render it
+plot(s)
+
+
+nodeOrder=unique(c(rbind(rr$source, rr$target)))
+
+colormapl=c(E='#ffcc00',N='green',S='blue',W='red')
+
+#Now we need to get the color for the node order.
+nodeColor=unname(colormapl[substring(nodeOrder, 1, 1)])
+
+#http://stackoverflow.com/a/32111596/454773
+colors_node_array = paste0("[", paste0("'", nodeColor,"'", collapse = ','), "]")
+
+opts = paste0("{ node: { colors: ", colors_node_array ," } }" )
+
+s=gvisSankey(rr[,c('source','target','value')], options=list( sankey=opts))
+plot(s)
+
+
+#Use the originating node colour for the edge
+opts = paste0("{ link: { colorMode: 'source' },node: { colors: ", colors_node_array ," } }" )
+s=gvisSankey(rr[,c('source','target','value')], options=list(sankey=opts))
+plot(s)
+
+s=gvisSankey(rr[,c('sourceName','targetName','value')], options=list(sankey=opts))
+plot(s)
+
+#Limit the rows
+rr2=rr[substring(rr$target, 1, 1)!=substring(rr$source, 1, 1),]
+
+#ABstract out the code that allows us to generate a new color array
+setNodeColors=function(df,source='source',target='target'){
+  #Interleave the nodes from the edgelist in the order they are introduced
+  nodeOrder=unique(c(rbind(df[[source]], df[[target]])))
+  #Generae a color mapping from the country indicator at the start of the country/region code
+  nodeColor=unname(colormapl[substring(nodeOrder, 1, 1)])
+  #Get the data in the form that the Sankey widget wants it...
+  colors_node_array = paste0("[", paste0("'", nodeColor,"'", collapse = ','), "]")
+  colors_node_array
+}
+
+colors_node_array=setNodeColors(rr2)
+
+opts = paste0("{ link: { colorMode: 'source' }, node: { colors: ", colors_node_array ," } }" )
+s=gvisSankey(rr2[,c('sourceName','targetName','value')], options=list(sankey=opts))
+plot(s)
+
+library(dplyr)
+countrymap=c(E='England',N='Northern Ireland',S='Scotland',W='Wales')
+  
+rr2$countrysource=countrymap[substring(rr2$source, 1, 1)]
+rr2$countrytarget=paste0(countrymap[substring(rr2$target, 1, 1)],' ')
+rrg = rr2 %>%
+          group_by(countrysource,countrytarget) %>%
+          summarise(value = sum(value))
+
+#Generate new color array
+colors_node_array=setNodeColors(rrg,'countrysource','countrytarget')
+
+opts = paste0("{ link: { colorMode: 'source' }, node: { colors: ", colors_node_array ," } }" )
+s=gvisSankey(rrg,options=list(sankey=opts))
+plot(s)
+
+opts = paste0("{ link: { colorMode: 'gradient' }, node: { colors: ", colors_node_array ," } }" )
+s=gvisSankey(rrg,options=list(sankey=opts))
+plot(s)
+
+library(rCharts)
+
+sankeyPlot2 <- rCharts$new()
+sankeyPlot2$setLib('http://timelyportfolio.github.io/rCharts_d3_sankey/')
+sankeyPlot2$set(
+  data = rr[,c('source','target','value')],
+  nodeWidth = 15,
+  nodePadding = 10,
+  layout = 32,
+  width = 750,
+  height = 500
+)
+
+sankeyPlot2$show('iframesrc', cdn = TRUE)
+
+#devtools::install_github("fbreitwieser/sankeyD3")
+library(sankeyD3)
+library(plyr)
+
+#Get a mapping from codes to numeric node IDs
+#Need to interleave the nodes appropriately
+rrd=data.frame(rid= c(rbind(regionsquarematrix2015$Region,
+                            paste0(regionsquarematrix2015$Region,'_'))) )
+
+rrd['num']=0:(nrow(rrd)-1)
+
+rrd['name']=c(rbind(c(regionsquarematrix2015$DESTINATION,
+                      paste0(regionsquarematrix2015$DESTINATION,'_'))))
+
+#Map the edges
+rr$source=as.integer(mapvalues(unlist(rr$source),from=unlist(rrd['rid']),to=unlist(rrd['num'])))
+rr$target=as.integer(mapvalues(unlist(rr$target),from=unlist(rrd['rid']),to=unlist(rrd['num'])))
+
+sankeyNetwork(Links = rr, Nodes = rrd, Source = "source", title="Migration Flows",
+            Target = "target", Value = "value", NodeID = "name",
+              fontSize = 12, nodeWidth = 30,showNodeValues = FALSE)
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
