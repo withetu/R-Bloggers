@@ -31,6 +31,127 @@ library(wordcloud)     # For... wordclouds
 library(XML)           # For easily reading HTML Tables
 
 
+################################################################################
+################################# Get Letters ##################################
+################################################################################
+
+# Getting & Reading in HTML Letters
+urls_77_97 <- paste('http://www.berkshirehathaway.com/letters/', seq(1977, 1997), '.html', sep='')
+html_urls <- c(urls_77_97,
+               'http://www.berkshirehathaway.com/letters/1998htm.html',
+               'http://www.berkshirehathaway.com/letters/1999htm.html',
+               'http://www.berkshirehathaway.com/2000ar/2000letter.html',
+               'http://www.berkshirehathaway.com/2001ar/2001letter.html')
+
+letters_html <- lapply(html_urls, function(x) read_html(x) %>% html_text())
+
+
+# Getting & Reading in PDF Letters
+urls_03_16 <- paste('http://www.berkshirehathaway.com/letters/', seq(2003, 2016), 'ltr.pdf', sep = '')
+pdf_urls <- data.frame('year' = seq(2002, 2016),
+                       'link' = c('http://www.berkshirehathaway.com/letters/2002pdf.pdf', urls_03_16))
+
+download_pdfs <- function(x) {
+  myfile = paste0(x['year'], '.pdf')
+  download.file(url = x['link'], destfile = myfile, mode = 'wb')
+  return(myfile)
+}
+
+pdfs <- apply(pdf_urls, 1, download_pdfs)
+letters_pdf <- lapply(pdfs, function(x) pdf_text(x) %>% paste(collapse=" "))
+tmp <- lapply(pdfs, function(x) if(file.exists(x)) file.remove(x)) # Clean up directory
+
+# Combine all letters in a data frame
+letters <- do.call(rbind, Map(data.frame, year=seq(1977,2016), text=c(letters_html, letters_pdf)))
+letters$text <- as.character(letters$text)
+
+
+################################################################################
+################################# Tidy Letters #################################
+################################################################################
+
+# Tidy letters
+tidy_letters <- letters %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word") %>%
+  filter(!grepl('[0-9]', word)) %>%
+  left_join(get_sentiments("bing"), by = "word") %>%
+  group_by(year) %>%
+  mutate(linenumber = row_number(),
+         sentiment = ifelse(is.na(sentiment), 'neutral', sentiment)) %>%
+  ungroup
+
+
+################################################################################
+################################# Get S&P Data ################################# --
+################################################################################
+
+# Get Historical S&P500 Returns
+sp500 <- readHTMLTable('http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html',
+                       header = T, which = 1, skip = c(1, seq(92,101))) %>%
+  select(1,2) %>%
+  `colnames<-`(c("year", "return")) %>%
+  mutate(return = as.numeric(strsplit(as.character(return), split = '%'))/100)
+
+# Calculate sentiment score by letter
+letters_sentiment <- tidy_letters %>%
+  count(year, sentiment) %>%
+  spread(key = sentiment, value = n) %>%
+  mutate(sentiment_pct = (positive - negative)/(positive + negative + neutral)) %>%
+  select(year, sentiment_pct)
+
+ggplot(letters_sentiment, aes(x = year, y = sentiment_pct)) + 
+  geom_bar(aes(fill = sentiment_pct < 0), stat = 'identity') + 
+  geom_text(aes(label = year, hjust = ifelse(sentiment_pct >= 0, -0.15, 1.15)), vjust = 0.5) +
+  scale_fill_manual(guide = F, values = c('#565b63', '#c40909')) +
+  scale_x_reverse(name = '') +
+  scale_y_percent(limits = c(-0.015, 0.045), breaks = c(-0.01, 0, 0.01, 0.02, 0.03, 0.04)) +
+  coord_flip() +
+  labs(y='Net Sentiment Ratio',
+       title='Text Sentiment of Berkshire Hathaway Letters to Shareholders',
+       subtitle='Negative sentiment is strongly associated with recession years',
+       caption='michaeltoth.me') + 
+  theme_ipsum(grid="X") +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+
+# Another interesting topic to examine is which words were actually the strongest contributors to the positive and negative sentiment in the letters. For this exercise, I analyzed the letters as one single text, and present the most common positive and negative words in the graph below.
+
+bing_word_counts <- tidy_letters %>%
+  count(word, sentiment, sort = TRUE) %>%
+  ungroup()
+
+top_sentiments <- bing_word_counts %>%
+  filter(sentiment != 'neutral') %>%
+  group_by(sentiment) %>%
+  top_n(12, wt = n) %>%
+  mutate(n = ifelse(sentiment == "negative", -n, n)) %>%
+  mutate(word = reorder(word, n))
+
+ggplot(top_sentiments, aes(x = word, y = n, fill = sentiment)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(guide = F, values = c("#af8dc3", "#7fbf7b")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(y = "Number of Occurrences",
+       x= '',
+       title = 'Text Sentiment of Berkshire Hathaway Letters to Shareholders',
+       subtitle = 'Most Common Positive and Negative Words',
+       caption = 'michaeltoth.me') +
+  theme_ipsum(grid = "Y") + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+
+# The word cloud below shows 400 of the most commonly used words, split by positive and negative sentiment.
+
+tidy_letters %>%
+  filter(sentiment != 'neutral') %>%
+  count(word, sentiment, sort = TRUE) %>%
+  reshape2::acast(word ~ sentiment, value.var = "n", fill = 0) %>% # Needed because acast returns a matrix, which comparison.cloud uses
+  comparison.cloud(colors = c("#af8dc3", "#7fbf7b"), max.words = 400)
+
+  
+
 
 
 
