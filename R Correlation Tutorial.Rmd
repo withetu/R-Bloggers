@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# ==================================================
+
+# R Correlation Tutorial
+# https://www.r-bloggers.com/r-correlation-tutorial/
+
+# ==================================================
+
+
+
+
+
+# Importing The Data
+movies <- read.csv(url("http://s3.amazonaws.com/dcwoods2717/movies.csv"))
+
+str(movies)
+
+summary(movies)
+
+profit <- movies$gross - movies$budget
+summary(profit)
+
+# Add a column for `profit` to `movies`
+movies$profit <- movies$gross - movies$budget
+
+# Correlation
+# Create the scatter plot with `ratings` on the x-axis and `profit` on the y-axis
+plot(movies$rating, movies$profit)
+# Add a regression linewith the form `abline(lm(y ~ x))`
+abline(lm(movies$profit ~ movies$rating))
+
+# Calculating Correlation in R
+# Compute Pearson correlation
+cor(movies$rating, movies$profit)
+# Correlation Matrix
+cor(movies[,4:10])
+
+# Visually Exploring Correlation: The R Correlation Matrix
+library(ggplot2)
+ggcorr(movies)
+
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
